@@ -1,0 +1,13 @@
+typewrite "You can see we have several files and folders in this directory."
+typewrite "One thing that catches my attention is the 'notes.txt' file. I wonder what's in it... "
+typewrite "We can use 'cat' to concatenate the contents of our file onto our screen. Let me demonstrate. "
+demonstrate "cat notes.txt" 
+typewrite "Try it for yourself!"
+make_user_say "cat notes.txt"
+
+typewrite "Remember how we listed all the files in this directory? Well, we technically didn't list all the files. To do so, you have to specify a flag to the 'ls' command. "
+typewrite "I'm not going to do it for you!" 
+make_user_say "ls -a" 
+typewrite "So you found my super secret notes..."
+typewrite "I guess you can read them"
+make_user_say "cat .secretnotes.txt"

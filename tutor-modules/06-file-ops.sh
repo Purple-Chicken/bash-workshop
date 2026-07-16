@@ -1,0 +1,17 @@
+typewrite "We can copy those notes to another file. Let me show you. "
+demonstrate "ls -a"
+demonstrate "cp .secretnotes.txt backup_secret.txt"
+demonstrate "ls -a"
+demonstrate "cat backup_secret.txt"
+rm backup_secret.txt 
+typewrite "Now you try copying the secrets!"
+make_user_say "cp .secretnotes.txt notsosecret.txt"
+typewrite "Uh oh, I think I want to rename this file!"
+typewrite "Fortunately, I can use the 'mv' command to move the contents of the file to a different filename. "
+typewrite "We can even move it to be under a different directory!"
+demonstrate "mv notsosecret.txt stuff/notsecret.txt"
+demonstrate "ls" 
+demonstrate "ls stuff"
+typewrite "See, it's no longer here! Can you do the same?"
+mv stuff/notsecret.txt notsosecret.txt 
+make_user_say "mv notsosecret.txt stuff/notsosecret.txt"
