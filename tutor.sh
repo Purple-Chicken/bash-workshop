@@ -3,45 +3,51 @@
 # Global Environment Setup
 export TUTOR_ROOT="$(pwd)/tutor"
 TUTOR_MODULES="$(pwd)/tutor-modules"
-
+export IN_COMMAND=0 
+export pagewait=5 
+export linewait=2
 # Cleanup on exit
 trap 'echo -e "\nCleaning up workspace..."; rm -rf "$TUTOR_ROOT"' EXIT
-trap ':' INT
+trap 'if [[ $IN_COMMAND -eq 0 ]]; then echo -e "\n[!] Exiting Tutor..."; exit 1; else echo ""; fi' INT
 
 mkdir -p "$TUTOR_ROOT"
 cd "$TUTOR_ROOT" || exit
 
 # Helper Functions
+function run_cmd() {
+  IN_COMMAND=1       # Tell the trap a command is running
+  eval "$1"          # Execute the command
+  IN_COMMAND=0       # Tell the trap we are idle again
+}
+
 function make_user_say () {
   local cmd="$*"
   local user_input=""
   local current_rel_dir=$(realpath --relative-to="$TUTOR_ROOT" "$(pwd)")
   [[ "$current_rel_dir" == "." ]] && current_rel_dir="~"
-  
   typewrite "Now, type in '$cmd'"
   sleep 0.5
   read -p "[user@shelldemo $current_rel_dir]$ " user_input
-
   # Allow 'cd' or 'cd ~' as valid inputs for 'cd $TUTOR_ROOT'
   if [[ "$user_input" == "$cmd" ]]; then
     if [[ "$user_input" == "cd" || "$user_inpput" == "cd ~" ]]; then eval "cd $TUTOR_ROOT" 
     else
-      eval "$user_input"
+      run_cmd "$user_input"
     fi
   fi
 
   while [[ "$user_input" != "$cmd" ]]; do
     if [[ "$user_input" =~ ^.*ls.*$ ]]; then
-      eval "$user_input"
+      run_cmd "$user_input"
       typewrite "Now that you know what is in this directory, try again!"
     elif [[ "$user_input" == "cd"  || "$user_input" == "cd ~" ]]; then 
-      eval "cd $TUTOR_ROOT"
+      run_cmd "cd $TUTOR_ROOT"
       typewrite "Now that you are in the tutor directory, try again!"
     elif [[ "$user_input" =~ ^.*cat.*$ ]]; then
-      eval "$user_input"
+      run_cmd "$user_input"
       typewrite "Now that you know the contents of the file, try again!"
     elif [[ "$user_input" =~ ^pwd$ ]]; then 
-      eval "$user_input"
+      run_cmd "$user_input"
       typewrite "Now that you know the current working directory, try again!"
     else
       typewrite "Try again!"
@@ -52,7 +58,7 @@ function make_user_say () {
       [[ "$current_rel_dir" == "." ]] && current_rel_dir="~"
       read -p "[user@shelldemo $current_rel_dir]$ " user_input
       if [[ "$user_input" == $cmd ]]; then
-        eval "$user_input" 
+        run_cmd "$user_input" 
         break
       fi
   done
@@ -67,7 +73,7 @@ function demonstrate(){
   printf "[demo@shelldemo %s]$ " "$current_rel_dir"
   sleep 0.5
   typewrite "$cmd"
-  eval "$cmd"
+  run_cmd "$cmd"
   current_rel_dir=$(realpath --relative-to="$TUTOR_ROOT" "$(pwd)")  
   printf "[demo@shelldemo %s]$ " "$current_rel_dir"
   sleep 1
@@ -77,7 +83,7 @@ function demonstrate(){
 function typewrite (){
   local text="$*"
   local delay=0.01
-  local linewait=0.5
+  linewait=0.5
   for ((i = 0; i < ${#text}; i++)); do
     printf "%s" "${text:$i:1}"
     sleep $delay
