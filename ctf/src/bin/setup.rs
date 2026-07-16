@@ -55,7 +55,9 @@ fn main() {
                 fs::set_permissions(path, perms).unwrap();
             },
             "strings" => {
-                let content = format!("MZ\x90\x00\x03\x00\xFF\xFF\x00\x00{}\x00\x00\x00", full_flag);
+                let mut content = b"MZ\x90\x00\x03\x00\xFF\xFF\x00\x00".to_vec();
+                content.extend_from_slice(full_flag.as_bytes());
+                content.extend_from_slice(b"\x00\x00\x00");
                 fs::write("challenges/suspicious.bin", content).unwrap();
             },
             "base64" => {
