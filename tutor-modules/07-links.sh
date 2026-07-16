@@ -21,7 +21,4 @@ make_user_say "ln notes.txt ./hard_link"
 typewrite "Notice that if you 'ls -l', the hard link doesn't show an arrow like the symlink does. It just looks like a regular file!"
 make_user_say "ls -l hard_link"
 
-typewrite "Great job! You've finished Phase 1 of the workshop."
-typewrite "You now know how to navigate, read, and manage files like a pro."
-typewrite "Goodbye for now!"
 sleep 2

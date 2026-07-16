@@ -16,7 +16,5 @@ demonstrate "tar -tf evidence_package.tar.gz"
 typewrite "Now you try! Create a compressed archive named 'logs_backup.tar.gz' containing only the 'access.log' file."
 make_user_say "tar -czf logs_backup.tar.gz access.log"
 
-typewrite "Phase 5 Complete! You have finished the Blue Team BASH Workshop."
-typewrite "You now have the fundamental skills to navigate, audit, and defend a Linux system."
-typewrite "Keep practicing, stay curious, and always check your hashes. Goodbye!"
+typewrite "That's all folks! You now know how to use some basic and intermediate commands!"
 sleep 3

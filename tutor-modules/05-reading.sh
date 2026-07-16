@@ -1,7 +1,8 @@
 cd "$TUTOR_ROOT"
 # Setup files
 echo "Blah blah blah here are some notes. " > notes.txt
-echo "I hope nobody is reading this... \nI love cats :3" > .secretnotes.txt
+echo "I hope nobody is reading this... 
+I love cats :3" > .secretnotes.txt
 
 # Create a dummy log file
 echo "Starting log..." > web.log
