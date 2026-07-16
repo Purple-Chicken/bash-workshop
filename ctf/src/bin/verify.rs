@@ -18,7 +18,7 @@ fn main() {
     let re = Regex::new(FLAG_REGEX).unwrap();
 
     if !re.is_match(input) {
-        println!("Invalid flag format. Flags look like: flag(description_hash)");
+        println!("Invalid flag format. Flags look like: flag(l33tc0d3_abc123)");
         return;
     }
 
@@ -41,19 +41,32 @@ fn main() {
             println!("You already have the master flag! Workshop complete!");
             return;
         }
+        // Use the user's home directory so sudo isn't required
+        let home = std::env::var("HOME").unwrap_or_else(|_| "/tmp".to_string());
+        let state_dir = format!("{}/.ctf_state", home);
+        let state_file = format!("{}/.ctf_state/found_flags.json", home);
 
-        let state_file = ".state/found_flags.json";
-        let mut found_flags: HashSet<String> = if let Ok(content) = fs::read_to_string(state_file) {
+        // Ensure the directory exists
+        if let Err(e) = fs::create_dir_all(&state_dir) {
+            eprintln!("Error creating state directory: {}", e);
+            std::process::exit(1);
+        }
+
+        let mut found_flags: HashSet<String> = if let Ok(content) = fs::read_to_string(&state_file) {
             serde_json::from_str(&content).unwrap_or_default()
         } else {
             HashSet::new()
         };
 
         found_flags.insert(id.to_string());
-        fs::write(state_file, serde_json::to_string(&found_flags).unwrap()).unwrap();
+        
+        if let Err(e) = fs::write(&state_file, serde_json::to_string(&found_flags).unwrap()) {
+            eprintln!("Error writing progress: {}", e);
+            std::process::exit(1);
+        }
 
         let total = CHALLENGES.len();
-        println!("Correct! {}/{} flags found.", found_flags.len(), total);
+        println!("Correct! {}/{} flags found.", found_flags.len(), total);;
 
         if found_flags.len() == total {
             println!("\n==========================================");
